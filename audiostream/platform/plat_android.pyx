@@ -37,6 +37,11 @@ class AndroidAudioInput(AudioInput):
 
     def __init__(self, *args, **kwargs):
         super(AndroidAudioInput, self).__init__(*args, **kwargs)
+
+        if self.buffersize == -1:
+            # use min buffer size as default
+            self.buffersize = AudioIn.getMinBufferSize(self.rate, self.android_channels, self.android_encoding)
+
         # check the configuration
         if not AudioIn.check_configuration(
                 self.buffersize, self.rate, self.android_channels, self.android_encoding):

@@ -6,7 +6,7 @@
 #include <android/log.h>
 #include <string.h>
 
-extern JNIEnv *SDL_ANDROID_GetJNIEnv();
+extern void *SDL_AndroidGetJNIEnv();
 
 typedef void (*audio_callback_t)(char *buffer, int bufsize);
 static audio_callback_t audio_callback = NULL;
@@ -29,7 +29,7 @@ static JNINativeMethod methods[] = {
 
 void audiostream_jni_register() {
 	if ( !audiostream_jni_registered ) {
-		JNIEnv *env = SDL_ANDROID_GetJNIEnv();
+		JNIEnv *env = (JNIEnv *) SDL_AndroidGetJNIEnv();
 		jclass cls = (*env)->FindClass(env, "org/audiostream/AudioIn");
 		(*env)->RegisterNatives(env, cls, methods, sizeof(methods) / sizeof(methods[0]));
 		audiostream_jni_registered = 1;

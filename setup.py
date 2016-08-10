@@ -9,8 +9,12 @@ from distutils.extension import Extension
 # or kivy-ios (http://github.com/kivy/kivy-ios)
 platform = sys.platform
 ndkplatform = environ.get('NDKPLATFORM')
+library_dirs = []
+libraries = []
 if ndkplatform is not None and environ.get('LIBLINK'):
     platform = 'android'
+    #libraries += ['log']
+    #library_dirs += ['libs/' + os.environ['ARCH']]
 kivy_ios_root = environ.get('KIVYIOSROOT', None)
 if kivy_ios_root is not None:
     platform = 'ios'
@@ -30,8 +34,7 @@ else:
         raise
 
 # configure the env
-libraries = ['SDL', 'SDL_mixer']
-library_dirs = []
+#library_dirs = []
 include_dirs = ['/usr/include/SDL']
 extra_objects = []
 extra_compile_args =['-ggdb', '-O2']
@@ -39,10 +42,12 @@ extra_link_args = []
 extensions = []
 
 if not have_cython:
-    libraries = ['sdl', 'sdl_mixer']
+    # this is active in Android build with kivy recipe
+    libraries += ['SDL2', 'SDL2_mixer']
 else:
     include_dirs.append('.')
     include_dirs.append('/usr/include/SDL')
+    libraries += ['SDL', 'SDL_mixer']
 
 # generate an Extension object from its dotted name
 def makeExtension(extName, files=None):
